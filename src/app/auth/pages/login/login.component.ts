@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -12,12 +16,23 @@ export class LoginComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit() {}
 
   login() {
-    console.log(this.myForm.valid);
-    console.log(this.myForm.value);
+    const { email, password } = this.myForm.value;
+
+    this.authService.login(email, password).subscribe((resp) => {
+      if (resp === true) {
+        this.router.navigateByUrl('/dashboard');
+      } else {
+        Swal.fire('Error', resp, 'error');
+      }
+    });
   }
 }
