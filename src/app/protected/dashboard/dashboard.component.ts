@@ -14,15 +14,16 @@ import { AuthService } from '../../auth/services/auth.service';
   ],
 })
 export class DashboardComponent implements OnInit {
+  constructor(private router: Router, private authService: AuthService) {}
+
   get user() {
     return this.authService.getterUser;
   }
-
-  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {}
 
   logOut() {
     this.router.navigateByUrl('/auth');
+    this.authService.logOut();
   }
 }

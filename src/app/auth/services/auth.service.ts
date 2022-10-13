@@ -27,10 +27,6 @@ export class AuthService {
       tap((response) => {
         if (response.ok) {
           localStorage.setItem('token', response.token!);
-          this._user = {
-            uid: response.uid!,
-            name: response.name!,
-          };
         }
       }),
       map((response) => response.ok),
@@ -47,9 +43,34 @@ export class AuthService {
 
     return this.http.get<AuthResponse>(url, { headers }).pipe(
       map((response) => {
+        this._user = {
+          name: response.name!,
+          uid: response.uid!,
+          email: response.email!,
+        };
         return response.ok;
       }),
       catchError((error) => of(false))
+    );
+  }
+
+  logOut() {
+    localStorage.clear();
+  }
+
+  registerUser(name: string, email: string, password: string) {
+    const url = `${this.baseURL}/auth/new`;
+
+    const body: any = { name, email, password };
+
+    return this.http.post<AuthResponse>(url, body).pipe(
+      tap((response) => {
+        if (response.ok) {
+          console.log('ok');
+        }
+      }),
+      map((response) => response.ok),
+      catchError((error) => of(error.error.message))
     );
   }
 }
