@@ -19,7 +19,6 @@ export class TokenValidationGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> | boolean {
-    console.log('canActivate');
     return this.authService.tokenValidation().pipe(
       tap((resp) => {
         if (!resp) {
@@ -30,7 +29,6 @@ export class TokenValidationGuard implements CanActivate, CanLoad {
   }
 
   canLoad(): Observable<boolean> | boolean {
-    console.log('canload');
     return this.authService.tokenValidation().pipe(
       tap((resp) => {
         if (!resp) {
